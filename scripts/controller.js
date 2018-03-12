@@ -33,8 +33,8 @@ function play_beep() {
 
 function do_beep_sound(sensor_value){
     var duration = (1-(sensor_value/MAX_SENSOR_VALUE))*1000;
-     if(duration < 100)
-         duration = 100;
+    if(duration < 100)
+        duration = 100;
     clearInterval(interval_value);
     play_beep();
     interval_value = setInterval(function () {
@@ -121,27 +121,27 @@ readKeys = function () {
 
 
     /*
-    for(var i=1;i<=arrows.length;i++){
-        if(map[arrows[i-1]]){
-            InitMessage(i-1,i,1);
-            $("#btn_"+i).css('background-color','#2f2');
-        }
-        else{
-            InitMessage(i-1,i,0);
-            $("#btn_"+i).css('background-color','');
-        }
+     for(var i=1;i<=arrows.length;i++){
+     if(map[arrows[i-1]]){
+     InitMessage(i-1,i,1);
+     $("#btn_"+i).css('background-color','#2f2');
+     }
+     else{
+     InitMessage(i-1,i,0);
+     $("#btn_"+i).css('background-color','');
+     }
 
-    }*/
+     }*/
 
 
 
     /*
-    * New change:
-    * 8,5  => A_1
-    * 7,4  => A_2
-    *
-    *
-    * */
+     * New change:
+     * 8,5  => A_1
+     * 7,4  => A_2
+     *
+     *
+     * */
     if(map[104]){
         InitMessage('8',1,1);
         $("#btn_8").css('background-color','#2f2');
@@ -235,14 +235,22 @@ SendToRobot = function () {
         '0'
     ];
 
+
 };
 
 function ConnectToRobot() {
     client = new net.Socket();
-    client.connect($("#port_inp").val(), $('#ip_inp').val(), function() {
-        console.log('Connected');
-        isConnected = true;
-    });
+
+    try{
+        client.connect($("#port_inp").val(), $('#ip_inp').val(), function() {
+            console.log('Connected');
+            isConnected = true;
+        });
+    }catch (err){
+        console.log("Socket connection failed ! :(");
+    }
+
+
 }
 
 function initUI() {
@@ -274,6 +282,13 @@ function initChart(){
     random.append(new Date(),MIN_SENSOR_VALUE);
 }
 
+function setProgressBar(sensor) {
+    const { BrowserWindow } = require('electron')
+    const windowsBrowser = new BrowserWindow()
+
+    windowsBrowser.setProgressBar(sensor/MAX_SENSOR_VALUE);
+}
+
 $(document).ready(function () {
 
     $("#submit_btn").on("click",function () {
@@ -301,6 +316,7 @@ $(document).ready(function () {
             random.append(new Date().getTime(),sensor );
             $("#sensor_out").val(sensor);
             last_sensor_value = sensor;
+            setProgressBar(sensor);
             console.log("Recieved: "+sensor+ "\r\n");
             isConnected = true;
 

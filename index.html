@@ -1,19 +1,127 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+    <link href="css/reset_vscode.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/diocss.css" rel="stylesheet">
+    <link href="css/jquery-ui.css" rel="stylesheet">
 
-  <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
-  </script>
-</html>
+</head>
+<body style="text-align: center">
+<div id="title-bar">
+
+    <div id="title-bar-btns">
+
+        <button id="min-btn">-</button>
+        <button id="max-btn">+</button>
+        <button id="close-btn">x</button>
+
+    </div>
+
+</div>
+<div class="content">
+    <h1 id="mainTitle">[A.R.C] - IranOpen 2017</h1>
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+    <!--We are using Node.js <script>document.write(process.versions.node)</script>,-->
+    <!--Chromium <script>document.write(process.versions.chrome)</script>,-->
+    <!--and Electron <script>document.write(process.versions.electron)</script>.-->
+
+    <canvas id="chart"></canvas>
+
+    <div id="controller" class="half">
+        <span class="title" >Controller</span><br>
+
+
+
+        <div id="daste">
+            <div id="btn_8" class="circle large ui-draggable ui-draggable-handle" style="left: 484px; top: 58px;">8</div>
+            <div id="btn_5" class="circle large ui-draggable ui-draggable-handle" style="left: 484px; top: 127px;">5</div>
+
+            <div id="btn_7" class="circle large ui-draggable ui-draggable-handle" style="left: 415px; top: 58px;">7</div>
+            <div id="btn_4" class="circle large ui-draggable ui-draggable-handle" style="left: 415px; top: 127px;">4</div>
+
+            <div id="btn_q" class="circle small ui-draggable ui-draggable-handle" style="left: -10px; top: 80px;">Q</div>
+            <div id="btn_w" class="circle small ui-draggable ui-draggable-handle" style="left: 26px; top: 80px;">W</div>
+            <div id="btn_e" class="circle small ui-draggable ui-draggable-handle" style="left: 67px; top: 80px;">E</div>
+            <div id="btn_r" class="circle small ui-draggable ui-draggable-handle" style="left: 108px; top: 80px;">R</div>
+            <div id="btn_t" class="circle small ui-draggable ui-draggable-handle" style="left: 147px; top: 80px;">T</div>
+            <div id="btn_y" class="circle small ui-draggable ui-draggable-handle" style="left: 190px; top: 80px;">Y</div>
+            <div id="btn_u" class="circle small ui-draggable ui-draggable-handle" style="left: 234px; top: 80px;">U</div>
+            <div id="btn_i" class="circle small ui-draggable ui-draggable-handle" style="left: 273px; top: 80px;">I</div>
+
+            <div id="btn_a" class="circle small ui-draggable ui-draggable-handle" style="left: 0; top: 115px;">A</div>
+            <div id="btn_s" class="circle small ui-draggable ui-draggable-handle" style="left: 40px; top: 115px;">S</div>
+            <div id="btn_d" class="circle small ui-draggable ui-draggable-handle" style="left: 80px; top: 115px;">D</div>
+            <div id="btn_f" class="circle small ui-draggable ui-draggable-handle" style="left: 122px; top: 115px;">F</div>
+            <div id="btn_g" class="circle small ui-draggable ui-draggable-handle" style="left: 162px; top: 115px;">G</div>
+            <div id="btn_h" class="circle small ui-draggable ui-draggable-handle" style="left: 201px; top: 115px;">H</div>
+            <div id="btn_j" class="circle small ui-draggable ui-draggable-handle" style="left: 242px; top: 115px;display: none;">J</div>
+            <div id="btn_k" class="circle small ui-draggable ui-draggable-handle" style="left: 284px; top: 115px;">K</div>
+
+
+        </div>
+
+
+    </div>
+    <div id="output" class="half">
+        <span class="title" >OutPut</span>
+        <table class="data">
+
+            <tr>
+                <td colspan="2">
+                    <div class="input-text success is-focused has-label">
+                        <label class="field-label" for="sensor_out">Sensor Output</label>
+                        <input class="field-input" id="sensor_out" value="0" >
+                    </div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="2">
+                    <div class="input-text success is-focused has-label">
+                        <label class="field-label" for="ip_inp">IP Address</label>
+                        <input class="field-input" id="ip_inp" value="192.168.1.6" >
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <div class="input-text success is-focused has-label">
+                        <label class="field-label" for="port_inp">Port Address</label>
+                        <input class="field-input" value="8585" id="port_inp">
+                    </div>
+                </td>
+            </tr>
+
+            <!--<tr>-->
+                <!--<td colspan="2">-->
+                    <!--<div class="input-text success is-focused has-label">-->
+                        <!--<label class="field-label" for="freq_inp">Noise frequency</label>-->
+                        <!--<input class="field-input" value="1000" id="freq_inp">-->
+                    <!--</div>-->
+                <!--</td>-->
+            <!--</tr>-->
+
+            <tr>
+                <td colspan="2">
+                    <button class="btn btn-success btn-block icon-paper-plane ripple" id="submit_btn" >Connect</button>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+</div>
+
+<script src="scripts/graph.js"></script>
+<script src="scripts/jquery.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+<script src="scripts/vscode_reset.js"></script>
+<script src="scripts/diojs.js"></script>
+<script src="scripts/jquery-ui.js"></script>
+<script src="scripts/beepjs.js"></script>
+<script src="scripts/controller.js"></script>

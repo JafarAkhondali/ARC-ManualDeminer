@@ -1,0 +1,184 @@
+*{
+    box-sizing: border-box;
+}
+
+html,body{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    text-align: center;
+    background: url("../images/free-dark-green-wallpaper-1.jpg") 50% 50% no-repeat #282828 fixed;
+    background-size: cover;
+}
+
+
+#mainTitle{
+    color: #2f2;
+}
+
+#controller, #output{
+    display: inline-block;
+    min-height: 400px;
+    text-align: center;
+}
+
+#output{
+    float: left;
+    margin-top: 10px;
+}
+
+#output .data{
+    text-align: left;
+    margin: 30px  auto;
+    color:#efefef;
+}
+
+#output .data td:nth-child(2){
+    color:#2f2;
+}
+#controller{
+    float: right;
+    text-align: center;
+    border-left: 0 solid black;
+    border-bottom: solid 8px #2f2;
+}
+
+.wrapper{
+    display: block;
+    width: 100%;
+}
+
+.half .title{
+    color: #2f2;
+    font-weight: 900;
+    font-size: 17px;
+    border-bottom: solid 2px #2f2;
+}
+
+.circle{
+    cursor: pointer;
+    position: absolute;
+    border-radius: 50%;
+    border: solid 1px #777;
+    background-color: rgba(0,0,0,0.4);
+    display: inline-block;
+    color: #eee;
+    text-align: center;
+    padding-top: 5px;
+    transition: .3s ease-out;
+
+}
+.circle:hover{
+    background-color: #292;
+}
+
+.circle.large{
+    width: 60px;
+    height: 60px;
+    padding-top: 20px;
+}
+.circle.small{
+    width: 30px;
+    height: 30px;
+    padding-top: 5px;
+}
+
+#controller #daste{
+    position: relative;
+    width: 600px;
+    height: 200px;
+    display: inline-block;
+    margin: auto;
+}
+
+#btn_1{
+    bottom: 5%;
+    right: 25%;
+}
+
+#btn_2{
+    bottom: 5%;
+    right: 65%;
+}
+
+#btn_3{
+    bottom: 0;
+    right: 10%;
+}
+
+
+#btn_4{
+    left: 10%;
+    bottom: 0;
+}
+
+
+
+#btn_5{
+    top:20px;
+    left: 15%;
+}
+#btn_6{
+    top:20px;
+    left: 23%;
+}
+
+#btn_7{
+    top:20px;
+    left: 31%;
+}
+
+
+
+
+#btn_8{
+    top:20px;
+    right: 15%;
+}
+#btn_9{
+    top:20px;
+    right: 23%;
+}
+
+#btn_10{
+    top:20px;
+    right: 31%;
+}
+
+#btn_11{
+    top:40%;
+    right: 5%;
+}
+
+#btn_12{
+    top:40%;
+    left: 5%;
+}
+
+.half{
+    width: 100%; !important;
+    display: block; !important;
+}
+
+@media screen and (min-width: 760px) {
+    .half{
+        width: 50%;
+        display: inline-block; !important;
+    }
+
+    #controller{
+        border-left: solid 8px #2f2;
+        border-bottom: solid 0 #000;
+    }
+
+}
+
+
+
+
+/******************[Shoudld be fixed in diostrap]*****************/
+
+.input-text {
+    display: inline-block;
+}
+

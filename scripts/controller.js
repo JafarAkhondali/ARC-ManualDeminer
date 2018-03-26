@@ -1,24 +1,30 @@
-
-var random;
+let random;
 const UPDATE_DELAY = 500;
 const KEY_DELAY = 100;
 const WATCH_DOG_INTERVAL_TIME= 1000;
 const MIN_SENSOR_VALUE = 0;
 const MAX_SENSOR_VALUE = 255;
-var isConnected = false;
-var client;
-var net = require('net');
-var interval_value=null;
+let isConnected = false;
+let isSilentRadio = false;
+let net = require('net');
+let client = new net.Socket();
+let interval_value=null;
 
-var canvas = null;
-var map = []; // Or you could call it "key"
+let silentNextRequest = false;
 
-var counter = 0;
-var last_sensor_value = 0;
+let canvas = null;
+let map = []; // Or you could call it "key"
+
+let counter = 0;
+let last_sensor_value = 0;
+
+
+const electron  = require('electron');
+const BrowserWindow = electron.BrowserWindow;
 
 
 onkeydown = onkeyup = function(e) {
-    e.keyCode
+    //e.keyCode;
     e = e || event; // to deal with IE
     map[e.keyCode] = e.type == 'keydown';
 
@@ -32,6 +38,8 @@ function play_beep() {
 }
 
 function do_beep_sound(sensor_value){
+    // sensor_value = MAX_SENSOR_VALUE - sensor_value;
+    // console.log(sensor_value);
     var duration = (1-(sensor_value/MAX_SENSOR_VALUE))*1000;
     if(duration < 100)
         duration = 100;
@@ -42,28 +50,8 @@ function do_beep_sound(sensor_value){
     },duration);
 }
 
-
-
-message = [
-    '0',
-    '0',
-    '0',
-
-    '0',
-    '0',
-    '0',
-
-    '0',
-    '0',
-    '0',
-
-
-    '0',
-    '0',
-    '0'
-
-];
-
+message = null;
+ZeroMessage();
 
 
 //40 = Down
@@ -104,6 +92,10 @@ keys = [
     {
         id:12,
         keys:['i','k']
+    },
+    {
+        id:13,
+        keys:['z','x','c','m']
     }
 ];
 
@@ -156,6 +148,8 @@ readKeys = function () {
         $("#btn_5").css('background-color','');
     }
 
+
+
     if(map[103]){
         InitMessage('7',2,1);
         $("#btn_7").css('background-color','#2f2');
@@ -193,7 +187,12 @@ readKeys = function () {
     if(!isConnected)
         return;
 
-    SendToRobot();
+
+    if(!isSilentRadio) //Dont do anything we are in silent state
+    {
+        SendToRobot();
+        //console.log("RadioSilented:" + isSilentRadio)
+    }
 
 
 };
@@ -202,21 +201,13 @@ readKeys = function () {
 
 
 InitMessage = function (btn_id,gate_id,value_state) {
+
+    if (gate_id==13)
+        silentNextRequest=true;
     message[gate_id-1] = value_state;
 };
 
-SendToRobot = function () {
-
-    //Disconnect robot
-    if(!isConnected){
-        console.log('No connection !');
-        return;
-    }
-
-    var final_msg = message.join('') + '!'  ;
-
-    console.log(final_msg);
-    client.write(final_msg);
+function ZeroMessage() {
     message = [
         '0',
         '0',
@@ -232,14 +223,50 @@ SendToRobot = function () {
 
         '0',
         '0',
+        '0',
+
+        /*
+
+         z -> Scan mineZ
+         x -> Go Through Water pool
+         c -> Do L Turn
+
+         m -> Cancel other operations
+
+        */
         '0'
     ];
+}
+SendToRobot = function () {
+
+    //Disconnect robot
+    if(!isConnected){
+        console.log('No connection :|');
+        return;
+    }
+
+    if (silentNextRequest){
+        isSilentRadio=true;
+        silentNextRequest=false;
+    }
+
+    let final_msg = message.join('') + '!'  ;
+
+    // console.log(final_msg);
+
+    try{
+        client.write(final_msg);
+    }catch (err){
+        console.log("Connection refused :(");
+    }
+
+    ZeroMessage();//Reset message value
 
 
 };
 
 function ConnectToRobot() {
-    client = new net.Socket();
+
 
     try{
         client.connect($("#port_inp").val(), $('#ip_inp').val(), function() {
@@ -283,10 +310,7 @@ function initChart(){
 }
 
 function setProgressBar(sensor) {
-    const { BrowserWindow } = require('electron')
-    const windowsBrowser = new BrowserWindow()
-
-    windowsBrowser.setProgressBar(sensor/MAX_SENSOR_VALUE);
+    // BrowserWindow.setProgressBar(sensor/MAX_SENSOR_VALUE);
 }
 
 $(document).ready(function () {
@@ -307,17 +331,18 @@ $(document).ready(function () {
         client.on('data', function(data) {
             //debugger;
             //console.log(data);
-
-
-
-
+            isSilentRadio = false;
 
             var sensor = data[0];
+
+            console.log(sensor);
+            sensor = MAX_SENSOR_VALUE - sensor;
             random.append(new Date().getTime(),sensor );
+
             $("#sensor_out").val(sensor);
             last_sensor_value = sensor;
             setProgressBar(sensor);
-            console.log("Recieved: "+sensor+ "\r\n");
+            // console.log("Recieved: "+sensor+ "\r\n");
             isConnected = true;
 
 
@@ -329,6 +354,10 @@ $(document).ready(function () {
             $("#submit_btn").html("Reconnect").css('color','#ff4444');
             ConnectToRobot();
             isConnected = false;
+        });
+
+        client.on('uncaughtException', function (err) {
+            console.log("Something went wrong :| "+err);
         });
 
 

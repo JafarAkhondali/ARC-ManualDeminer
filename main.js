@@ -1,19 +1,19 @@
-const electron = require('electron')
+const electron = require('electron');
 // Module to control application life.
-const app = electron.app
+const app = electron.app;
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const BrowserWindow = electron.BrowserWindow;
 
-const path = require('path')
-const url = require('url')
+const path = require('path');
+const url = require('url');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600, frame: false})
+  mainWindow = new BrowserWindow({width: 800, height: 600, frame: false,icon: '/home/black-hole/programming/IranOpen2017/test/electron-quick-start' + '/icon.ico'});
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -23,9 +23,9 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 
-  mainWindow.maximize()
+  mainWindow.maximize();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -33,8 +33,21 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
+  });
+
+
+//to make singleton instance
+  const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
   })
-}
+
+  if (isSecondInstance) {
+    app.quit()
+  }}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
